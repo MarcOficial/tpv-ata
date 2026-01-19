@@ -1,20 +1,27 @@
-// Bloqueo si no es admin
 if (localStorage.getItem("tpv_role") !== "admin") {
   window.location.href = "index.html";
 }
-
-document.getElementById("adminName").innerHTML =
-  `Admin: <strong>${localStorage.getItem("tpv_operator")}</strong>`;
 
 document.getElementById("backBtn").addEventListener("click", () => {
   window.location.href = "index.html";
 });
 
-// Cambiar entre secciones
 function openSection(section) {
-  document.querySelectorAll(".admin-section").forEach(s => s.style.display = "none");
-  document.getElementById(`section-${section}`).style.display = "block";
-}
+  const content = document.getElementById("adminContent");
 
-// Mostrar por defecto
-openSection("users");
+  if (section === "users") {
+    content.innerHTML = "<h2>Gestión de usuarios</h2><p>Aquí irán los usuarios.</p>";
+  }
+
+  if (section === "categories") {
+    content.innerHTML = "<h2>Carpetas de productos</h2><p>Aquí irán las categorías.</p>";
+  }
+
+  if (section === "products") {
+    content.innerHTML = "<h2>Productos</h2><p>Aquí irán los productos.</p>";
+  }
+
+  if (section === "tickets") {
+    content.innerHTML = "<h2>Tickets recientes</h2><p>Aquí irán los tickets.</p>";
+  }
+}
