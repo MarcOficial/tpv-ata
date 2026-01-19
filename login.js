@@ -1,25 +1,50 @@
-async function loadDB() {
-  const res = await fetch("api/database.php?action=get");
-  return await res.json();
-}
+// ===============================
+// USUARIOS DEFINIDOS POR TI
+// ===============================
+// Añade, borra o edita usuarios aquí mismo.
+// Puedes crear tantos como quieras.
 
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
+const USERS = [
+  {
+    user: "admin",
+    pass: "admin123",
+    name: "Administrador",
+    role: "admin"
+  },
+  {
+    user: "ata01",
+    pass: "1234",
+    name: "Operador 01",
+    role: "operator"
+  }
+];
+
+// ===============================
+// LÓGICA DEL LOGIN
+// ===============================
+
+document.getElementById("loginForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const user = username.value.trim();
-  const pass = password.value.trim();
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
   const status = document.getElementById("loginStatus");
 
-  const db = await loadDB();
-  const found = db.users.find(u => u.user === user && u.pass === pass);
+  // Buscar usuario en la lista manual
+  const found = USERS.find(
+    u => u.user === username && u.pass === password
+  );
 
   if (!found) {
     status.textContent = "Credenciales incorrectas";
     return;
   }
 
+  // Guardar sesión
   localStorage.setItem("tpv_operator", found.name);
   localStorage.setItem("tpv_role", found.role);
 
+  // Redirigir al TPV
   window.location.href = "index.html";
 });
+
