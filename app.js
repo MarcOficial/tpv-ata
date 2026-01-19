@@ -3,21 +3,38 @@
 ============================ */
 
 const operator = localStorage.getItem("tpv_operator");
+const role = localStorage.getItem("tpv_role");
 
 if (!operator) {
   window.location.href = "login.html";
 }
 
-document.getElementById("operatorName").innerHTML =
-  `Operador: <strong>${operator}</strong>`;
+document.getElementById("operatorName").textContent =
+  "Operador: " + operator;
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
   localStorage.removeItem("tpv_operator");
+  localStorage.removeItem("tpv_role");
   window.location.href = "login.html";
 });
 
 /* ============================
-   PRODUCTOS / SERVICIOS
+   BOTÓN ADMIN
+============================ */
+
+const adminBtn = document.getElementById("adminBtn");
+
+if (role === "admin") {
+  adminBtn.style.display = "inline-block";
+  adminBtn.addEventListener("click", () => {
+    window.location.href = "admin.html";
+  });
+} else {
+  adminBtn.style.display = "none";
+}
+
+/* ============================
+   PRODUCTOS
 ============================ */
 
 const PRODUCTS = [
@@ -33,16 +50,9 @@ const PRODUCTS = [
 const TAX_RATE = 0.21;
 let ticketLines = [];
 
-/* ============================
-   UTILIDADES
-============================ */
-
-const formatCurrency = (v) =>
-  v.toLocaleString("es-ES", { style: "currency", currency: "EUR" });
-
-/* ============================
-   RENDER PRODUCTOS
-============================ */
+function formatCurrency(v) {
+  return v.toLocaleString("es-ES", { style: "currency", currency: "EUR" });
+}
 
 function renderProducts(filter = "") {
   const container = document.getElementById("productList");
@@ -50,38 +60,21 @@ function renderProducts(filter = "") {
 
   const f = filter.toLowerCase();
 
-  const filtered = PRODUCTS.filter(
-    (p) => p.name.toLowerCase().includes(f) || p.id.toLowerCase().includes(f)
-  );
-
-  filtered.forEach((p) => {
-    const card = document.createElement("div");
-    card.className = "product-card";
-
-    card.innerHTML = `
-      <div class="product-info">
-        <span class="product-name">${p.name}</span>
-        <span class="product-code">${p.id}</span>
-      </div>
-      <div class="product-meta">
-        <span class="product-price">${formatCurrency(p.price)}</span>
-        <span class="product-category">${p.category}</span>
-        <button class="btn btn-primary">Añadir</button>
-      </div>
+  PRODUCTS.filter(p =>
+    p.name.toLowerCase().includes(f) || p.id.toLowerCase().includes(f)
+  ).forEach(p => {
+    const div = document.createElement("div");
+    div.className = "product-item";
+    div.innerHTML = `
+      <strong>${p.name}</strong> (${p.id}) - ${formatCurrency(p.price)}
+      <button class="btn-primary" onclick='addToTicket(${JSON.stringify(p)})'>Añadir</button>
     `;
-
-    card.querySelector("button").addEventListener("click", () => addToTicket(p));
-
-    container.appendChild(card);
+    container.appendChild(div);
   });
 }
 
-/* ============================
-   TICKET
-============================ */
-
 function addToTicket(product) {
-  const existing = ticketLines.find((l) => l.id === product.id);
+  const existing = ticketLines.find(l => l.id === product.id);
 
   if (existing) existing.qty++;
   else ticketLines.push({ ...product, qty: 1 });
@@ -90,22 +83,17 @@ function addToTicket(product) {
 }
 
 function changeQty(id, delta) {
-  const line = ticketLines.find((l) => l.id === id);
+  const line = ticketLines.find(l => l.id === id);
   if (!line) return;
 
   line.qty += delta;
-  if (line.qty <= 0) ticketLines = ticketLines.filter((l) => l.id !== id);
+  if (line.qty <= 0) ticketLines = ticketLines.filter(l => l.id !== id);
 
   renderTicket();
 }
 
 function removeLine(id) {
-  ticketLines = ticketLines.filter((l) => l.id !== id);
-  renderTicket();
-}
-
-function clearTicket() {
-  ticketLines = [];
+  ticketLines = ticketLines.filter(l => l.id !== id);
   renderTicket();
 }
 
@@ -113,58 +101,23 @@ function renderTicket() {
   const container = document.getElementById("ticketList");
   container.innerHTML = "";
 
-  if (ticketLines.length === 0) {
-    container.innerHTML = `<div style="padding:10px;color:#9ca3af;">Ticket vacío.</div>`;
-    updateTotals();
-    return;
-  }
-
-  ticketLines.forEach((line) => {
-    const row = document.createElement("div");
-    row.className = "ticket-line";
-
-    row.innerHTML = `
-      <div class="ticket-name">${line.name}</div>
-
-      <div class="ticket-qty">
-        <button data-action="dec">-</button>
-        <span>${line.qty}</span>
-        <button data-action="inc">+</button>
-      </div>
-
-      <div class="ticket-price">${formatCurrency(line.price)}</div>
-      <div class="ticket-total">${formatCurrency(line.price * line.qty)}</div>
-
-      <div class="ticket-remove">
-        <button>&times;</button>
-      </div>
+  ticketLines.forEach(line => {
+    const div = document.createElement("div");
+    div.className = "ticket-item";
+    div.innerHTML = `
+      ${line.name} x ${line.qty} = ${formatCurrency(line.qty * line.price)}
+      <button onclick="changeQty('${line.id}', -1)">-</button>
+      <button onclick="changeQty('${line.id}', 1)">+</button>
+      <button onclick="removeLine('${line.id}')">X</button>
     `;
-
-    row.querySelector('[data-action="dec"]').onclick = () =>
-      changeQty(line.id, -1);
-
-    row.querySelector('[data-action="inc"]').onclick = () =>
-      changeQty(line.id, 1);
-
-    row.querySelector(".ticket-remove button").onclick = () =>
-      removeLine(line.id);
-
-    container.appendChild(row);
+    container.appendChild(div);
   });
 
   updateTotals();
 }
 
-/* ============================
-   TOTALES
-============================ */
-
 function updateTotals() {
-  const subtotal = ticketLines.reduce(
-    (acc, l) => acc + l.price * l.qty,
-    0
-  );
-
+  const subtotal = ticketLines.reduce((acc, l) => acc + l.price * l.qty, 0);
   const tax = subtotal * TAX_RATE;
   const total = subtotal + tax;
 
@@ -173,55 +126,32 @@ function updateTotals() {
   document.getElementById("totalAmount").textContent = formatCurrency(total);
 }
 
-/* ============================
-   COBRO
-============================ */
-
 function chargeTicket() {
   const status = document.getElementById("statusMessage");
 
   if (ticketLines.length === 0) {
-    status.style.color = "#f87171";
     status.textContent = "No hay líneas en el ticket.";
     return;
   }
 
   const method = document.querySelector('input[name="paymentMethod"]:checked').value;
 
-  const subtotal = ticketLines.reduce((acc, l) => acc + l.price * l.qty, 0);
-  const tax = subtotal * TAX_RATE;
-  const total = subtotal + tax;
-
-  status.style.color = "#22c55e";
-  status.textContent = `Cobrado en ${method}. Total: ${formatCurrency(total)}`;
+  status.textContent = "Cobrado en " + method;
 
   setTimeout(() => {
-    clearTicket();
+    ticketLines = [];
+    renderTicket();
     status.textContent = "";
-  }, 2500);
+  }, 2000);
 }
-
-/* ============================
-   INICIALIZACIÓN
-============================ */
 
 document.addEventListener("DOMContentLoaded", () => {
   renderProducts();
   renderTicket();
 
-  document.getElementById("searchInput").addEventListener("input", (e) =>
+  document.getElementById("searchInput").addEventListener("input", e =>
     renderProducts(e.target.value)
   );
 
-  document.getElementById("clearTicketBtn").onclick = clearTicket;
   document.getElementById("chargeBtn").onclick = chargeTicket;
-});
-
-// Si el operador es admin, permitir acceso
-const isAdmin = localStorage.getItem("tpv_role") === "admin";
-
-document.getElementById("adminBtn").style.display = isAdmin ? "inline-block" : "none";
-
-document.getElementById("adminBtn").addEventListener("click", () => {
-  window.location.href = "admin.html";
 });
