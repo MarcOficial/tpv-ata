@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acceso Operador · TPV ATA</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-panel">
+      <h1 class="title">TPV ATA</h1>
+      <h2 class="subtitle">Acceso de Operador</h2>
+
+      <form id="loginForm">
+        <div class="input-group">
+          <label>Usuario</label>
+          <input type="text" id="username" required autocomplete="off" />
+        </div>
+
+        <div class="input-group">
+          <label>Contraseña</label>
+          <input type="password" id="password" required />
+        </div>
+
+        <button type="submit" class="btn-login">Entrar</button>
+
+        <p id="loginStatus" class="status"></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>
