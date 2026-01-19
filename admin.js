@@ -1,17 +1,11 @@
-/* ============================
-   CONTROL DE ACCESO
-============================ */
 if (localStorage.getItem("tpv_role") !== "admin") {
   window.location.href = "index.html";
 }
 
-document.getElementById("backBtn").addEventListener("click", () => {
+document.getElementById("backBtn").onclick = () => {
   window.location.href = "index.html";
-});
+};
 
-/* ============================
-   API
-============================ */
 async function loadDB() {
   const res = await fetch("api/database.php?action=get");
   return await res.json();
@@ -20,42 +14,31 @@ async function loadDB() {
 async function saveDB(db) {
   await fetch("api/database.php?action=save", {
     method: "POST",
-    body: JSON.stringify(db),
+    body: JSON.stringify(db)
   });
 }
 
-/* ============================
-   NAVEGACIÓN
-============================ */
 document.querySelectorAll(".admin-nav").forEach(btn => {
-  btn.addEventListener("click", () => {
-    openSection(btn.dataset.section);
-  });
+  btn.onclick = () => openSection(btn.dataset.section);
 });
 
 async function openSection(section) {
   const content = document.getElementById("adminContent");
   const db = await loadDB();
 
-  /* ============================
-     DASHBOARD
-  ============================ */
   if (section === "dashboard") {
     content.innerHTML = `
       <h2>Dashboard</h2>
-      <p>Total categorías: ${db.categories.length}</p>
-      <p>Total artículos: ${db.products.length}</p>
-      <p>Total tickets: ${db.tickets.length}</p>
+      <p>Categorías: ${db.categories.length}</p>
+      <p>Artículos: ${db.products.length}</p>
+      <p>Tickets: ${db.tickets.length}</p>
     `;
   }
 
-  /* ============================
-     CATEGORÍAS
-  ============================ */
   if (section === "categories") {
     content.innerHTML = `
       <h2>Categorías</h2>
-      <button class="btn-primary" id="addCatBtn">Añadir categoría</button>
+      <button class="btn-primary" id="addCat">Añadir categoría</button>
       <div id="catList"></div>
     `;
 
@@ -66,32 +49,25 @@ async function openSection(section) {
       div.className = "product-item";
       div.innerHTML = `
         <strong>${c.name}</strong>
-        <button onclick="deleteCategory(${c.id})" class="btn-secondary">Eliminar</button>
+        <button class="btn-secondary" onclick="deleteCategory(${c.id})">Eliminar</button>
       `;
       list.appendChild(div);
     });
 
-    document.getElementById("addCatBtn").onclick = () => {
+    document.getElementById("addCat").onclick = async () => {
       const name = prompt("Nombre de categoría:");
       if (!name) return;
 
-      db.categories.push({
-        id: Date.now(),
-        name
-      });
-
-      saveDB(db);
+      db.categories.push({ id: Date.now(), name });
+      await saveDB(db);
       openSection("categories");
     };
   }
 
-  /* ============================
-     PRODUCTOS / ARTÍCULOS
-  ============================ */
   if (section === "products") {
     content.innerHTML = `
       <h2>Artículos</h2>
-      <button class="btn-primary" id="addProdBtn">Añadir artículo</button>
+      <button class="btn-primary" id="addProd">Añadir artículo</button>
       <div id="prodList"></div>
     `;
 
@@ -104,15 +80,15 @@ async function openSection(section) {
       div.className = "product-item";
       div.innerHTML = `
         <strong>${p.name}</strong> - ${cat} - ${p.price}€
-        <button onclick="deleteProduct(${p.id})" class="btn-secondary">Eliminar</button>
+        <button class="btn-secondary" onclick="deleteProduct(${p.id})">Eliminar</button>
       `;
       list.appendChild(div);
     });
 
-    document.getElementById("addProdBtn").onclick = () => {
-      const name = prompt("Nombre del artículo:");
+    document.getElementById("addProd").onclick = async () => {
+      const name = prompt("Nombre:");
       const price = parseFloat(prompt("Precio:"));
-      const category = parseInt(prompt("ID de categoría:"));
+      const category = parseInt(prompt("ID categoría:"));
 
       if (!name || !price || !category) return;
 
@@ -123,21 +99,18 @@ async function openSection(section) {
         category
       });
 
-      saveDB(db);
+      await saveDB(db);
       openSection("products");
     };
   }
 
-  /* ============================
-     TICKETS
-  ============================ */
   if (section === "tickets") {
     content.innerHTML = `
-      <h2>Tickets recientes</h2>
-      <div id="ticketListAdmin"></div>
+      <h2>Tickets</h2>
+      <div id="ticketList"></div>
     `;
 
-    const list = document.getElementById("ticketListAdmin");
+    const list = document.getElementById("ticketList");
 
     db.tickets.forEach(t => {
       const div = document.createElement("div");
@@ -145,27 +118,24 @@ async function openSection(section) {
       div.innerHTML = `
         <strong>Ticket #${t.id}</strong><br>
         Fecha: ${t.datetime}<br>
-        Total: ${t.total}€<br>
-        Operador: ${t.operator}
+        Total: ${t.total}€
       `;
       list.appendChild(div);
     });
   }
 }
 
-/* ============================
-   CRUD GLOBALES
-============================ */
 async function deleteCategory(id) {
   const db = await loadDB();
   db.categories = db.categories.filter(c => c.id !== id);
-  saveDB(db);
+  await saveDB(db);
   openSection("categories");
 }
 
 async function deleteProduct(id) {
   const db = await loadDB();
   db.products = db.products.filter(p => p.id !== id);
-  saveDB(db);
+  await saveDB(db);
   openSection("products");
 }
+
