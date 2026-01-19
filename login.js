@@ -1,26 +1,23 @@
-// Usuarios permitidos
-const OPERATORS = [
-  { user: "ata01", pass: "1234", name: "Operador 01", role: "operator" },
-  { user: "admin", pass: "admin123", name: "Administrador", role: "admin" }
-];
+async function loadDB() {
+  const res = await fetch("api/database.php?action=get");
+  return await res.json();
+}
 
-document.getElementById("loginForm").addEventListener("submit", function (e) {
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const user = document.getElementById("username").value.trim();
-  const pass = document.getElementById("password").value.trim();
+  const user = username.value.trim();
+  const pass = password.value.trim();
   const status = document.getElementById("loginStatus");
 
-  const found = OPERATORS.find(
-    (op) => op.user === user && op.pass === pass
-  );
+  const db = await loadDB();
+  const found = db.users.find(u => u.user === user && u.pass === pass);
 
   if (!found) {
     status.textContent = "Credenciales incorrectas";
     return;
   }
 
-  // Guardar sesión
   localStorage.setItem("tpv_operator", found.name);
   localStorage.setItem("tpv_role", found.role);
 
