@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Admin · ATA</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-title">ATA Admin</span>
+      <span class="brand-subtitle">Gestión del sistema</span>
+    </div>
+
+    <div class="session-info">
+      <span id="adminName"></span>
+      <button id="backBtn" class="btn btn-secondary">Volver al TPV</button>
+    </div>
+  </header>
+
+  <main class="admin-layout">
+
+    <section class="admin-menu">
+      <button class="admin-item" onclick="openSection('users')">Usuarios</button>
+      <button class="admin-item" onclick="openSection('categories')">Carpetas</button>
+      <button class="admin-item" onclick="openSection('products')">Productos</button>
+      <button class="admin-item" onclick="openSection('tickets')">Tickets recientes</button>
+    </section>
+
+    <section class="admin-content">
+      <div id="section-users" class="admin-section">Gestión de usuarios</div>
+      <div id="section-categories" class="admin-section">Gestión de carpetas</div>
+      <div id="section-products" class="admin-section">Gestión de productos</div>
+      <div id="section-tickets" class="admin-section">Tickets recientes</div>
+    </section>
+
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>
