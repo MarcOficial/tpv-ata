@@ -1,0 +1,33 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "user": "admin",
+      "pass": "admin123",
+      "name": "Administrador",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "user": "ata01",
+      "pass": "1234",
+      "name": "Operador 01",
+      "role": "operator"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Servicio técnico"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Diagnóstico avanzado",
+      "category": 1,
+      "price": 35
+    }
+  ],
+  "tickets": []
+}
