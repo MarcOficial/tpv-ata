@@ -3,31 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Acceso Operador · TPV ATA</title>
-  <link rel="stylesheet" href="login.css" />
+  <title>Acceso · TPV ATA</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <div class="login-container">
-    <div class="login-panel">
-      <h1 class="title">TPV ATA</h1>
-      <h2 class="subtitle">Acceso de Operador</h2>
+<body class="centered">
 
-      <form id="loginForm">
-        <div class="input-group">
-          <label>Usuario</label>
-          <input type="text" id="username" required autocomplete="off" />
-        </div>
+  <div class="login-box">
+    <h1>TPV ATA</h1>
+    <h2>Acceso de Operador</h2>
 
-        <div class="input-group">
-          <label>Contraseña</label>
-          <input type="password" id="password" required />
-        </div>
+    <form id="loginForm">
+      <label>Usuario</label>
+      <input type="text" id="username" required />
 
-        <button type="submit" class="btn-login">Entrar</button>
+      <label>Contraseña</label>
+      <input type="password" id="password" required />
 
-        <p id="loginStatus" class="status"></p>
-      </form>
-    </div>
+      <button type="submit" class="btn-primary">Entrar</button>
+
+      <p id="loginStatus" class="status"></p>
+    </form>
   </div>
 
   <script src="login.js"></script>
