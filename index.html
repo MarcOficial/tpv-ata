@@ -3,44 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TPV ATA</title>
+  <title>TPV ATA - Assistència Tècnica Avançada</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+  <!-- Barra superior -->
   <header class="topbar">
-    <h1>TPV ATA</h1>
-    <div>
+    <div class="brand">
+      <span class="brand-title">TPV ATA</span>
+      <span class="brand-subtitle">Assistència Tècnica Avançada</span>
+    </div>
+
+    <div class="session-info">
       <span id="operatorName"></span>
       <button id="adminBtn" class="btn-primary">Admin</button>
       <button id="logoutBtn" class="btn-secondary">Cerrar sesión</button>
     </div>
   </header>
 
+  <!-- Contenido principal -->
   <main class="layout">
-    <section>
-      <h2>Productos</h2>
-      <input type="text" id="searchInput" placeholder="Buscar..." />
-      <div id="productList"></div>
+
+    <!-- Panel de productos -->
+    <section class="panel">
+      <h2>Servicios / Productos</h2>
+
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Buscar por nombre o código..."
+      />
+
+      <div id="productList" class="product-list">
+        <!-- Productos generados por app.js -->
+      </div>
     </section>
 
-    <section>
-      <h2>Ticket</h2>
-      <div id="ticketList"></div>
+    <!-- Panel de ticket -->
+    <section class="panel">
+      <h2>Ticket actual</h2>
 
-      <p>Subtotal: <span id="subtotalAmount">0 €</span></p>
-      <p>IVA: <span id="taxAmount">0 €</span></p>
-      <p>Total: <span id="totalAmount">0 €</span></p>
+      <div id="ticketList" class="ticket-list">
+        <!-- Líneas de ticket generadas por app.js -->
+      </div>
 
-      <h3>Forma de pago</h3>
-      <label><input type="radio" name="paymentMethod" value="efectivo" checked /> Efectivo</label>
-      <label><input type="radio" name="paymentMethod" value="tarjeta" /> Tarjeta</label>
-      <label><input type="radio" name="paymentMethod" value="transferencia" /> Transferencia</label>
+      <div class="ticket-summary">
+        <p>Subtotal: <span id="subtotalAmount">0,00 €</span></p>
+        <p>IVA (21%): <span id="taxAmount">0,00 €</span></p>
+        <p><strong>Total: <span id="totalAmount">0,00 €</span></strong></p>
+      </div>
 
-      <button id="chargeBtn" class="btn-primary">Cobrar</button>
-      <p id="statusMessage" class="status"></p>
+      <div class="payment-section">
+        <h3>Forma de pago</h3>
+        <label><input type="radio" name="paymentMethod" value="efectivo" checked /> Efectivo</label>
+        <label><input type="radio" name="paymentMethod" value="tarjeta" /> Tarjeta</label>
+        <label><input type="radio" name="paymentMethod" value="transferencia" /> Transferencia</label>
+
+        <button id="chargeBtn" class="btn-primary">Cobrar</button>
+        <p id="statusMessage" class="status"></p>
+      </div>
     </section>
+
   </main>
+
+  <footer class="footer">
+    <span>TPV ATA · Assistència Tècnica Avançada</span>
+    <span>Versión 1.0</span>
+  </footer>
 
   <script src="app.js"></script>
 </body>
