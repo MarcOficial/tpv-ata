@@ -217,3 +217,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("chargeBtn").onclick = chargeTicket;
 });
 
+// Si el operador es admin, permitir acceso
+const isAdmin = localStorage.getItem("tpv_role") === "admin";
+
+document.getElementById("adminBtn").style.display = isAdmin ? "inline-block" : "none";
+
+document.getElementById("adminBtn").addEventListener("click", () => {
+  window.location.href = "admin.html";
+});
