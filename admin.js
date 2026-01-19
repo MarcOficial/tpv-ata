@@ -43,54 +43,10 @@ async function openSection(section) {
   if (section === "dashboard") {
     content.innerHTML = `
       <h2>Dashboard</h2>
-      <p>Total usuarios: ${db.users.length}</p>
       <p>Total categorías: ${db.categories.length}</p>
-      <p>Total productos: ${db.products.length}</p>
+      <p>Total artículos: ${db.products.length}</p>
       <p>Total tickets: ${db.tickets.length}</p>
     `;
-  }
-
-  /* ============================
-     USUARIOS
-  ============================ */
-  if (section === "users") {
-    content.innerHTML = `
-      <h2>Usuarios</h2>
-      <button class="btn-primary" id="addUserBtn">Añadir usuario</button>
-      <div id="userList"></div>
-    `;
-
-    const list = document.getElementById("userList");
-
-    db.users.forEach(u => {
-      const div = document.createElement("div");
-      div.className = "product-item";
-      div.innerHTML = `
-        <strong>${u.name}</strong> (${u.user}) - ${u.role}
-        <button onclick="deleteUser(${u.id})" class="btn-secondary">Eliminar</button>
-      `;
-      list.appendChild(div);
-    });
-
-    document.getElementById("addUserBtn").onclick = () => {
-      const name = prompt("Nombre:");
-      const user = prompt("Usuario:");
-      const pass = prompt("Contraseña:");
-      const role = prompt("Rol (admin/operator):");
-
-      if (!name || !user || !pass || !role) return;
-
-      db.users.push({
-        id: Date.now(),
-        name,
-        user,
-        pass,
-        role
-      });
-
-      saveDB(db);
-      openSection("users");
-    };
   }
 
   /* ============================
@@ -130,12 +86,12 @@ async function openSection(section) {
   }
 
   /* ============================
-     PRODUCTOS
+     PRODUCTOS / ARTÍCULOS
   ============================ */
   if (section === "products") {
     content.innerHTML = `
-      <h2>Productos</h2>
-      <button class="btn-primary" id="addProdBtn">Añadir producto</button>
+      <h2>Artículos</h2>
+      <button class="btn-primary" id="addProdBtn">Añadir artículo</button>
       <div id="prodList"></div>
     `;
 
@@ -154,7 +110,7 @@ async function openSection(section) {
     });
 
     document.getElementById("addProdBtn").onclick = () => {
-      const name = prompt("Nombre:");
+      const name = prompt("Nombre del artículo:");
       const price = parseFloat(prompt("Precio:"));
       const category = parseInt(prompt("ID de categoría:"));
 
@@ -198,15 +154,8 @@ async function openSection(section) {
 }
 
 /* ============================
-   FUNCIONES CRUD GLOBALES
+   CRUD GLOBALES
 ============================ */
-async function deleteUser(id) {
-  const db = await loadDB();
-  db.users = db.users.filter(u => u.id !== id);
-  saveDB(db);
-  openSection("users");
-}
-
 async function deleteCategory(id) {
   const db = await loadDB();
   db.categories = db.categories.filter(c => c.id !== id);
