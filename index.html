@@ -7,46 +7,41 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  <!-- Topbar -->
   <header class="topbar">
     <div class="brand">
       <span class="brand-title">TPV ATA</span>
       <span class="brand-subtitle">Assistència Tècnica Avançada</span>
     </div>
+
     <div class="session-info">
-      <span>Operador: <strong>ATA-01</strong></span>
-      <span>Fecha: <span id="currentDate"></span></span>
+      <span id="operatorName"></span>
+      <button id="logoutBtn" class="btn btn-secondary">Cerrar sesión</button>
     </div>
   </header>
 
+  <!-- Layout -->
   <main class="layout">
-    <!-- Columna izquierda: productos/servicios -->
+
+    <!-- Panel izquierdo: productos -->
     <section class="panel panel-left">
       <div class="panel-header">
         <h2>Servicios / Productos</h2>
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Buscar por nombre o código..."
-        />
+        <input type="text" id="searchInput" placeholder="Buscar..." />
       </div>
 
-      <div id="productList" class="product-list">
-        <!-- Se rellena por JS -->
-      </div>
+      <div id="productList" class="product-list"></div>
     </section>
 
-    <!-- Columna derecha: ticket -->
+    <!-- Panel derecho: ticket -->
     <section class="panel panel-right">
       <div class="panel-header">
         <h2>Ticket actual</h2>
-        <button id="clearTicketBtn" class="btn btn-secondary">
-          Vaciar ticket
-        </button>
+        <button id="clearTicketBtn" class="btn btn-secondary">Vaciar</button>
       </div>
 
-      <div id="ticketList" class="ticket-list">
-        <!-- Líneas de ticket generadas por JS -->
-      </div>
+      <div id="ticketList" class="ticket-list"></div>
 
       <div class="ticket-summary">
         <div class="summary-row">
@@ -65,35 +60,26 @@
 
       <div class="payment-section">
         <h3>Forma de pago</h3>
+
         <div class="payment-methods">
-          <label>
-            <input type="radio" name="paymentMethod" value="efectivo" checked />
-            Efectivo
-          </label>
-          <label>
-            <input type="radio" name="paymentMethod" value="tarjeta" />
-            Tarjeta
-          </label>
-          <label>
-            <input type="radio" name="paymentMethod" value="transferencia" />
-            Transferencia
-          </label>
+          <label><input type="radio" name="paymentMethod" value="efectivo" checked /> Efectivo</label>
+          <label><input type="radio" name="paymentMethod" value="tarjeta" /> Tarjeta</label>
+          <label><input type="radio" name="paymentMethod" value="transferencia" /> Transferencia</label>
         </div>
 
-        <button id="chargeBtn" class="btn btn-primary">
-          Cobrar y cerrar ticket
-        </button>
-
+        <button id="chargeBtn" class="btn btn-primary">Cobrar</button>
         <div id="statusMessage" class="status-message"></div>
       </div>
     </section>
+
   </main>
 
   <footer class="footer">
     <span>TPV ATA · Assistència Tècnica Avançada</span>
-    <span>Versión 1.0 · Demo local</span>
+    <span>Versión 1.0</span>
   </footer>
 
   <script src="app.js"></script>
 </body>
 </html>
+
