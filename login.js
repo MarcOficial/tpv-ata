@@ -22,7 +22,7 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
 
   // Guardar sesión local
   localStorage.setItem("tpv_operator", found.name);
-  localStorage.setItem("tpv_role", found.role);   // ← ESTA LÍNEA FALTABA
+  localStorage.setItem("tpv_role", found.role); // ← ESTA LÍNEA ES LA QUE FALTABA
 
   // Redirigir al TPV
   window.location.href = "index.html";
