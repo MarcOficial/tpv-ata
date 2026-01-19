@@ -29,25 +29,19 @@
     { "id": 103, "name": "Reparación avanzada", "category": 1, "price": 120 },
     { "id": 104, "name": "Formateo + instalación SO", "category": 1, "price": 50 },
     { "id": 105, "name": "Limpieza interna + pasta térmica", "category": 1, "price": 45 },
-    { "id": 106, "name": "Recuperación de datos básica", "category": 1, "price": 80 },
-    { "id": 107, "name": "Montaje de PC", "category": 1, "price": 70 },
 
     { "id": 201, "name": "SSD 500GB", "category": 2, "price": 75 },
     { "id": 202, "name": "SSD 1TB", "category": 2, "price": 120 },
     { "id": 203, "name": "RAM 8GB DDR4", "category": 2, "price": 35 },
     { "id": 204, "name": "RAM 16GB DDR4", "category": 2, "price": 65 },
-    { "id": 205, "name": "Fuente 550W 80+ Bronze", "category": 2, "price": 55 },
-    { "id": 206, "name": "Caja ATX con ventiladores", "category": 2, "price": 49 },
-    { "id": 207, "name": "Placa base B450", "category": 2, "price": 89 },
 
-    { "id": 301, "name": "Licencia Windows 10 Pro", "category": 3, "price": 25 },
-    { "id": 302, "name": "Licencia Windows 11 Pro", "category": 3, "price": 30 },
+    { "id": 301, "name": "Windows 10 Pro", "category": 3, "price": 25 },
+    { "id": 302, "name": "Windows 11 Pro", "category": 3, "price": 30 },
     { "id": 303, "name": "Office 2021 Pro Plus", "category": 3, "price": 35 },
-    { "id": 304, "name": "Antivirus anual", "category": 3, "price": 20 },
 
-    { "id": 401, "name": "Contrato mantenimiento anual", "category": 4, "price": 180 },
-    { "id": 402, "name": "Contrato mantenimiento trimestral", "category": 4, "price": 60 }
+    { "id": 401, "name": "Contrato anual", "category": 4, "price": 180 }
   ],
 
-  "tickets": []
+  "tickets": [],
+  "clients": []
 }
