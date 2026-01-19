@@ -1,4 +1,4 @@
-// Operadores permitidos (demo)
+// Usuarios permitidos
 const OPERATORS = [
   { user: "ata01", pass: "1234", name: "Operador 01", role: "operator" },
   { user: "admin", pass: "admin123", name: "Administrador", role: "admin" }
@@ -20,10 +20,9 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
     return;
   }
 
-  // Guardar sesión local
+  // Guardar sesión
   localStorage.setItem("tpv_operator", found.name);
-  localStorage.setItem("tpv_role", found.role); // ← ESTA LÍNEA ES LA QUE FALTABA
+  localStorage.setItem("tpv_role", found.role);
 
-  // Redirigir al TPV
   window.location.href = "index.html";
 });
