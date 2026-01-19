@@ -9,33 +9,21 @@
 <body>
 
   <header class="topbar">
-    <div class="brand">
-      <span class="brand-title">ATA Admin</span>
-      <span class="brand-subtitle">Gestión del sistema</span>
-    </div>
-
-    <div class="session-info">
-      <span id="adminName"></span>
-      <button id="backBtn" class="btn btn-secondary">Volver al TPV</button>
-    </div>
+    <h1>Panel Admin ATA</h1>
+    <button id="backBtn" class="btn-secondary">Volver al TPV</button>
   </header>
 
-  <main class="admin-layout">
+  <main class="layout">
+    <aside>
+      <button onclick="openSection('users')" class="btn-primary">Usuarios</button>
+      <button onclick="openSection('categories')" class="btn-primary">Carpetas</button>
+      <button onclick="openSection('products')" class="btn-primary">Productos</button>
+      <button onclick="openSection('tickets')" class="btn-primary">Tickets</button>
+    </aside>
 
-    <section class="admin-menu">
-      <button class="admin-item" onclick="openSection('users')">Usuarios</button>
-      <button class="admin-item" onclick="openSection('categories')">Carpetas</button>
-      <button class="admin-item" onclick="openSection('products')">Productos</button>
-      <button class="admin-item" onclick="openSection('tickets')">Tickets recientes</button>
+    <section id="adminContent">
+      <h2>Selecciona una sección</h2>
     </section>
-
-    <section class="admin-content">
-      <div id="section-users" class="admin-section">Gestión de usuarios</div>
-      <div id="section-categories" class="admin-section">Gestión de carpetas</div>
-      <div id="section-products" class="admin-section">Gestión de productos</div>
-      <div id="section-tickets" class="admin-section">Tickets recientes</div>
-    </section>
-
   </main>
 
   <script src="admin.js"></script>
