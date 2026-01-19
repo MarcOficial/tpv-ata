@@ -1,7 +1,7 @@
 // Operadores permitidos (demo)
 const OPERATORS = [
-  { user: "ata01", pass: "1234", name: "Operador 01" },
-  { user: "ata02", pass: "5678", name: "Operador 02" }
+  { user: "ata01", pass: "1234", name: "Operador 01", role: "operator" },
+  { user: "admin", pass: "admin123", name: "Administrador", role: "admin" }
 ];
 
 document.getElementById("loginForm").addEventListener("submit", function (e) {
