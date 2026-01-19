@@ -1,157 +1,175 @@
 /* ============================
-   CONTROL DE SESIÓN
+   SESIÓN
 ============================ */
-
 const operator = localStorage.getItem("tpv_operator");
 const role = localStorage.getItem("tpv_role");
 
-if (!operator) {
+if (!operator) window.location.href = "login.html";
+
+document.getElementById("operatorName").textContent = "Operador: " + operator;
+
+document.getElementById("logoutBtn").onclick = () => {
+  localStorage.clear();
   window.location.href = "login.html";
-}
-
-document.getElementById("operatorName").textContent =
-  "Operador: " + operator;
-
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  localStorage.removeItem("tpv_operator");
-  localStorage.removeItem("tpv_role");
-  window.location.href = "login.html";
-});
-
-/* ============================
-   BOTÓN ADMIN
-============================ */
-
-const adminBtn = document.getElementById("adminBtn");
+};
 
 if (role === "admin") {
   adminBtn.style.display = "inline-block";
-  adminBtn.addEventListener("click", () => {
-    window.location.href = "admin.html";
-  });
+  adminBtn.onclick = () => window.location.href = "admin.html";
 } else {
   adminBtn.style.display = "none";
 }
 
 /* ============================
-   PRODUCTOS
+   API
 ============================ */
+async function loadDB() {
+  const res = await fetch("api/database.php?action=get");
+  return await res.json();
+}
 
-const PRODUCTS = [
-  { id: "SRV-001", name: "Diagnóstico avanzado", category: "Servicio", price: 35 },
-  { id: "SRV-002", name: "Reparación básica", category: "Servicio", price: 60 },
-  { id: "SRV-003", name: "Reparación avanzada", category: "Servicio", price: 120 },
-  { id: "SRV-004", name: "Instalación SO", category: "Software", price: 50 },
-  { id: "SRV-005", name: "Mantenimiento anual", category: "Contrato", price: 180 },
-  { id: "MAT-001", name: "SSD 500GB", category: "Material", price: 75 },
-  { id: "MAT-002", name: "RAM 16GB", category: "Material", price: 65 }
-];
+async function saveDB(db) {
+  await fetch("api/database.php?action=save", {
+    method: "POST",
+    body: JSON.stringify(db)
+  });
+}
 
-const TAX_RATE = 0.21;
-let ticketLines = [];
+/* ============================
+   VARIABLES
+============================ */
+let PRODUCTS = [];
+let ticket = [];
+const TAX = 0.21;
 
-function formatCurrency(v) {
-  return v.toLocaleString("es-ES", { style: "currency", currency: "EUR" });
+/* ============================
+   CARGAR PRODUCTOS
+============================ */
+async function initTPV() {
+  const db = await loadDB();
+  PRODUCTS = db.products;
+  renderProducts();
+  renderTicket();
 }
 
 function renderProducts(filter = "") {
-  const container = document.getElementById("productList");
-  container.innerHTML = "";
+  const list = document.getElementById("productList");
+  list.innerHTML = "";
 
   const f = filter.toLowerCase();
 
   PRODUCTS.filter(p =>
-    p.name.toLowerCase().includes(f) || p.id.toLowerCase().includes(f)
+    p.name.toLowerCase().includes(f)
   ).forEach(p => {
     const div = document.createElement("div");
     div.className = "product-item";
     div.innerHTML = `
-      <strong>${p.name}</strong> (${p.id}) - ${formatCurrency(p.price)}
-      <button class="btn-primary" onclick='addToTicket(${JSON.stringify(p)})'>Añadir</button>
+      <strong>${p.name}</strong> - ${p.price}€
+      <button class="btn-primary" onclick="addToTicket(${p.id})">Añadir</button>
     `;
-    container.appendChild(div);
+    list.appendChild(div);
   });
 }
 
-function addToTicket(product) {
-  const existing = ticketLines.find(l => l.id === product.id);
+/* ============================
+   TICKET
+============================ */
+function addToTicket(id) {
+  const product = PRODUCTS.find(p => p.id === id);
+  const existing = ticket.find(l => l.id === id);
 
   if (existing) existing.qty++;
-  else ticketLines.push({ ...product, qty: 1 });
+  else ticket.push({ ...product, qty: 1 });
 
   renderTicket();
 }
 
 function changeQty(id, delta) {
-  const line = ticketLines.find(l => l.id === id);
+  const line = ticket.find(l => l.id === id);
   if (!line) return;
 
   line.qty += delta;
-  if (line.qty <= 0) ticketLines = ticketLines.filter(l => l.id !== id);
+  if (line.qty <= 0) ticket = ticket.filter(l => l.id !== id);
 
-  renderTicket();
-}
-
-function removeLine(id) {
-  ticketLines = ticketLines.filter(l => l.id !== id);
   renderTicket();
 }
 
 function renderTicket() {
-  const container = document.getElementById("ticketList");
-  container.innerHTML = "";
+  const list = document.getElementById("ticketList");
+  list.innerHTML = "";
 
-  ticketLines.forEach(line => {
+  ticket.forEach(l => {
     const div = document.createElement("div");
     div.className = "ticket-item";
     div.innerHTML = `
-      ${line.name} x ${line.qty} = ${formatCurrency(line.qty * line.price)}
-      <button onclick="changeQty('${line.id}', -1)">-</button>
-      <button onclick="changeQty('${line.id}', 1)">+</button>
-      <button onclick="removeLine('${line.id}')">X</button>
+      ${l.name} x ${l.qty} = ${(l.qty * l.price).toFixed(2)}€
+      <button onclick="changeQty(${l.id}, -1)">-</button>
+      <button onclick="changeQty(${l.id}, 1)">+</button>
+      <button onclick="removeLine(${l.id})">X</button>
     `;
-    container.appendChild(div);
+    list.appendChild(div);
   });
 
   updateTotals();
 }
 
-function updateTotals() {
-  const subtotal = ticketLines.reduce((acc, l) => acc + l.price * l.qty, 0);
-  const tax = subtotal * TAX_RATE;
-  const total = subtotal + tax;
-
-  document.getElementById("subtotalAmount").textContent = formatCurrency(subtotal);
-  document.getElementById("taxAmount").textContent = formatCurrency(tax);
-  document.getElementById("totalAmount").textContent = formatCurrency(total);
+function removeLine(id) {
+  ticket = ticket.filter(l => l.id !== id);
+  renderTicket();
 }
 
-function chargeTicket() {
-  const status = document.getElementById("statusMessage");
+/* ============================
+   TOTALES
+============================ */
+function updateTotals() {
+  const subtotal = ticket.reduce((acc, l) => acc + l.price * l.qty, 0);
+  const tax = subtotal * TAX;
+  const total = subtotal + tax;
 
-  if (ticketLines.length === 0) {
-    status.textContent = "No hay líneas en el ticket.";
+  subtotalAmount.textContent = subtotal.toFixed(2) + "€";
+  taxAmount.textContent = tax.toFixed(2) + "€";
+  totalAmount.textContent = total.toFixed(2) + "€";
+}
+
+/* ============================
+   COBRAR
+============================ */
+async function chargeTicket() {
+  if (ticket.length === 0) {
+    statusMessage.textContent = "No hay artículos en el ticket.";
     return;
   }
 
-  const method = document.querySelector('input[name="paymentMethod"]:checked').value;
+  const db = await loadDB();
 
-  status.textContent = "Cobrado en " + method;
+  const subtotal = ticket.reduce((acc, l) => acc + l.price * l.qty, 0);
+  const tax = subtotal * TAX;
+  const total = subtotal + tax;
 
-  setTimeout(() => {
-    ticketLines = [];
-    renderTicket();
-    status.textContent = "";
-  }, 2000);
-}
+  db.tickets.push({
+    id: Date.now(),
+    datetime: new Date().toLocaleString(),
+    items: ticket,
+    total,
+    operator
+  });
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderProducts();
+  await saveDB(db);
+
+  statusMessage.textContent = "Ticket cobrado correctamente.";
+  ticket = [];
   renderTicket();
 
-  document.getElementById("searchInput").addEventListener("input", e =>
-    renderProducts(e.target.value)
-  );
+  setTimeout(() => statusMessage.textContent = "", 2000);
+}
 
-  document.getElementById("chargeBtn").onclick = chargeTicket;
-});
+/* ============================
+   EVENTOS
+============================ */
+searchInput.oninput = e => renderProducts(e.target.value);
+chargeBtn.onclick = chargeTicket;
+
+/* ============================
+   INICIO
+============================ */
+initTPV();
